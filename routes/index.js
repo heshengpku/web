@@ -1,10 +1,5 @@
 var express = require('express');
-var crypto = require('crypto');
 var router = express.Router();
-
-var db = require('../db/db');
-var User = require('../db/user');
-var Post = require('../db/post');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -14,7 +9,13 @@ router.get('/', function (req, res, next) {
     }
 });
 
-//发布证书
+//用户进入发证页面
+router.get('/add', function (req, res) {
+    res.render('add', {
+        title: "发布证书"
+    });
+});
+
 router.post('/add', function (req, res, next) {
     var cert = new Cert({
         certId: certId,
@@ -24,14 +25,6 @@ router.post('/add', function (req, res, next) {
         valid: valid,
         reason: reason,
         owner: owner,
-    });
-    cert.add(function (err) {
-        if (err) {
-            req.session.message = err.message;
-            return res.redirect('/check');
-        }
-        req.session.success = "发证成功";
-        res.redirect('/users/' + currentUser.name);
     });
 });
 
@@ -50,8 +43,7 @@ router.get('/check', function (req, res) {
     });
 });
 
-router.post('/check', isLogin);
-//用户点击注册按钮
+//用户点击查证按钮
 router.post('/check', function (req, res) {
     
 });
