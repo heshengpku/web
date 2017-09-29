@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='../stylesheets/style.css')
+  body
+      nav.header
+          ul.list
+              li.logo
+                  a(href='/') Microblog
+              li
+                  a(href='/') 首页
+              li
+                  a(href='/add') 发证
+              li
+                  a(href='/check') 查证
+       div.container
+           block content
+           hr
+           footer.footer
+               p
+                   a(href='http://www.kingdee.com') Kingdee
+                   | @2017

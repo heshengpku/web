@@ -1,0 +1,11 @@
+extends layout
+block content
+    h3.field.regheader #{title}
+    form.regform(method='post')
+        p.mess #{message}
+        div.item
+            label.label(for='certId') 证书编号
+            input(type='text',placeholder='证书编号（唯一）',id='certId',name='certId')
+        div.item
+            label.label
+            input(type='submit' id='sub',name='sub' value='提交')
