@@ -5,15 +5,8 @@ block content
         section.intro
             if message
                 h3.indexmes #{message}
-            h1.welcome 欢迎来到 KingdeeCert
+            h1.welcome 欢迎来到 KingdeeCert系统
             h3.tech KingdeeCert是一个基于Hyperledger Fabric区块链网络的证书发布与查询系统。
             p.btnlist
                 a.login(href='/check') 查验证书
                 a.register(href='/add') 发布证书
-                    
-        section.show
-            each val in certs
-                article.col
-                    h3.author #{val.certId}是
-                    p
-                        | #{val.certName}
