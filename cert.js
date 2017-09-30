@@ -58,57 +58,85 @@ Cert.prototype.add = function () {
     return data;
 };
 
-Cert.prototype.getCert = function (certId) {
-    var options = {
-        host: '123.207.51.234',
-        port: '3000',
-        path: '/api/queries/selectCertificatesById?certId=' + certId,
-        method: 'GET'
-    };
+// Cert.prototype.getCert = function (certId) {
+//     var options = {
+//         host: '123.207.51.234',
+//         port: '3000',
+//         path: '/api/queries/selectCertificatesById?certId=' + certId,
+//         method: 'GET'
+//     };
 
+//     var errcode = 1;
+//     var data = [];
+
+//     var req = http.request(options, function (res) {
+//         res.setEncoding('utf8');
+//         res.on('data', function (result) {
+//             var temp = JSON.parse(result);
+//             for (var i in temp) {
+//                 errcode = 0;
+//                 var ele = {
+//                     certId: temp[i].certId,
+//                     issueDate: new Date(temp[i].issueDate),
+//                     certName: temp[i].cert.certName,
+//                     description: temp[i].cert.description,
+//                     valid: temp[i].cert.valid.unit === 'Forever' ? 'Forever' : temp[i].cert.valid.period + ' ' + temp[i].cert.valid.unit,
+//                     reason: temp[i].reason,
+//                     issuer: temp[i].issuer.replace(/\S+#/, ''),
+//                     owner: temp[i].owner.replace(/\S+#/, ''),
+//                 }
+//                 console.log('certId: ' + ele.certId + '\n' +
+//                     'issueDate: ' + ele.issueDate + '\n' +
+//                     'certName: ' + ele.certName + '\n' +
+//                     'description: ' + ele.description + '\n' +
+//                     'valid: ' + ele.valid + '\n' +
+//                     'issuer: ' + ele.issuer + '\n' +
+//                     'owner: ' + ele.owner + '\n'
+//                 );
+//                 data.push(ele);
+//             }
+//         });
+//         res.on("end", function () {
+//             // return console.log(errcode);
+//             return {
+//                 'errcode': errcode,
+//                 'data': data
+//             };
+//         });
+//     });
+
+//     req.on('error', function (err) {
+//         console.log("Got error: " + err.message);
+//     });
+//     req.end();
+// };
+
+Cert.prototype.getCert = function (certId) {
     var errcode = 1;
     var data = [];
 
-    var req = http.request(options, function (res) {
-        res.setEncoding('utf8');
-        res.on('data', function (result) {
-            var temp = JSON.parse(result);
-            for (var i in temp) {
-                errcode = 0;
-                var ele = {
-                    certId: temp[i].certId,
-                    issueDate: new Date(temp[i].issueDate),
-                    certName: temp[i].cert.certName,
-                    description: temp[i].cert.description,
-                    valid: temp[i].cert.valid.unit === 'Forever' ? 'Forever' : temp[i].cert.valid.period + ' ' + temp[i].cert.valid.unit,
-                    reason: temp[i].reason,
-                    issuer: temp[i].issuer.replace(/\S+#/, ''),
-                    owner: temp[i].owner.replace(/\S+#/, ''),
-                }
-                console.log('certId: ' + ele.certId + '\n' +
-                    'issueDate: ' + ele.issueDate + '\n' +
-                    'certName: ' + ele.certName + '\n' +
-                    'description: ' + ele.description + '\n' +
-                    'valid: ' + ele.valid + '\n' +
-                    'issuer: ' + ele.issuer + '\n' +
-                    'owner: ' + ele.owner + '\n'
-                );
-                data.push(ele);
-            }
-        });
-        res.on("end", function () {
-            // return console.log(errcode);
-            return {
-                'errcode': errcode,
-                'data': data
-            };
-        });
-    });
+    errcode = 0;
+    var ele = {
+        certId: certId,
+        issueDate: new Date('2017-09-30'),
+        certName: 'Test',
+        description: 'Test',
+        valid: 'Forever',
+        reason: 'Web Test',
+        issuer: 'Id:99999',
+        owner: 'Id:00001',
+    }
+    console.log('certId: ' + ele.certId + '\n' +
+        'issueDate: ' + ele.issueDate + '\n' +
+        'certName: ' + ele.certName + '\n' +
+        'description: ' + ele.description + '\n' +
+        'valid: ' + ele.valid + '\n' +
+        'issuer: ' + ele.issuer + '\n' +
+        'owner: ' + ele.owner + '\n'
+    );
+    data.push(ele);
 
-    req.on('error', function (err) {
-        console.log("Got error: " + err.message);
-    });
-    req.end();
+    return new Promise(errcode, data);
 };
 
 module.exports = Cert;

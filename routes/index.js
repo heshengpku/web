@@ -17,23 +17,23 @@ router.get('/add', function (req, res) {
 
 router.post('/add', function (req, res) {
     var cert = new Cert();
-    cert.certId = req.body.certId;
-    cert.issueDate = new Date();
-    cert.certName = req.body.certName;
-    cert.description = req.body.description;
-    cert.reason = req.body.reason;
-    cert.owner = req.body.owner;
-    cert.add(function () {
+    data[0].certId = req.body.certId;
+    data[0].issueDate = new Date();
+    data[0].certName = req.body.certName;
+    data[0].description = req.body.description;
+    data[0].reason = req.body.reason;
+    data[0].owner = req.body.owner;
+    data[0].add(function () {
         res.render('show', {
             title: "查验证书",
-            certId: cert.certId,
-            // issueDate: cert.issueDate,
-            certName: cert.certName,
-            // description: cert.description,
-            // valid: cert.valid,
-            // reason: cert.reason,
-            // issuer: cert.issuer,
-            // owner: cert.owner
+            certId: data[0].certId,
+            // issueDate: data[0].issueDate,
+            certName: data[0].certName,
+            // description: data[0].description,
+            // valid: data[0].valid,
+            // reason: data[0].reason,
+            // issuer: data[0].issuer,
+            // owner: data[0].owner
         });
     });
 });
@@ -57,18 +57,17 @@ router.get('/check', function (req, res) {
 router.post('/check', function (req, res) {
     var cert = new Cert();
     cert.getCert(req.body.certId, function (errcode, data) {
-        var cert = data[0];
         consolo.log('e');
         res.render('show', {
             title: "查验证书",
-            certId: cert.certId,
-            issueDate: getTime(cert.issueDate),
-            certName: cert.certName,
-            description: cert.description,
-            valid: cert.valid,
-            reason: cert.reason,
-            issuer: cert.issuer,
-            owner: cert.owner
+            certId: data[0].certId,
+            issueDate: getTime(data[0].issueDate),
+            certName: data[0].certName,
+            description: data[0].description,
+            valid: data[0].valid,
+            reason: data[0].reason,
+            issuer: data[0].issuer,
+            owner: data[0].owner
         });
     });
 });
