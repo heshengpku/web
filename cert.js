@@ -15,23 +15,23 @@ var Cert = function () {
     var owner;
 };
 
-Cert.prototype.add = function () {
+Cert.prototype.post = function (data) {
     var contents = JSON.stringify({
         '$class': 'org.kingdee.ca.PublishCertificate',
-        certId: this.certId,
-        issueDate: this.issueDate,
+        certId: data.certId,
+        issueDate: data.issueDate,
         cert: {
             '$class': 'org.kingdee.ca.CertTemp',
-            certName: this.certName,
-            description: this.description,
+            certName: data.certName,
+            description: data.description,
             valid: {
                 '$class': 'org.kingdee.ca.ValidPeriod',
                 period: 0,
                 unit: 'Forever'
             }
         },
-        reason: this.reason,
-        owner: 'resource:org.kingdee.ca.Issuer#' + this.owner
+        reason: data.reason,
+        owner: 'resource:org.kingdee.ca.Issuer#' + data.owner
     });
 
     var options = {
@@ -45,73 +45,137 @@ Cert.prototype.add = function () {
         }
     };
 
+    var errcode = 1;
+    var data;
+
     var req = http.request(options, function (res) {
         res.setEncoding('utf8');
-        res.on('data', function (data) {
-            console.log(data);
+        res.on('data', function (result) {
+            var temp = JSON.parse(result);
+            data = {
+                certId: temp.certId,
+                issueDate: new Date(temp.issueDate),
+                certName: temp.cert.certName,
+                description: temp.cert.description,
+                valid: temp.cert.valid.unit === 'Forever' ? 'Forever' : temp.cert.valid.period + ' ' + temp.cert.valid.unit,
+                reason: temp.reason,
+                issuer: temp.issuer.replace(/\S+#/, ''),
+                owner: temp.owner.replace(/\S+#/, ''),
+            };
+            errcode = 0;
+        });
+        res.on("end", function () {
+            return {
+                'errcode': errcode,
+                'data': data
+            };
+        });
+        res.on("error", function () {
+            return {
+                'errcode': 1,
+                'data': []
+            };
         });
     });
 
     req.write(contents);
     req.end();
-
-    return data;
 };
 
-// Cert.prototype.getCert = function (certId) {
-//     var options = {
-//         host: '123.207.51.234',
-//         port: '3000',
-//         path: '/api/queries/selectCertificatesById?certId=' + certId,
-//         method: 'GET'
-//     };
+Cert.prototype.postTest = function (data) {
+    var contents = JSON.stringify({
+        '$class': 'org.kingdee.ca.PublishCertificate',
+        certId: data.certId,
+        issueDate: data.issueDate,
+        cert: {
+            '$class': 'org.kingdee.ca.CertTemp',
+            certName: data.certName,
+            description: data.description,
+            valid: {
+                '$class': 'org.kingdee.ca.ValidPeriod',
+                period: 0,
+                unit: 'Forever'
+            }
+        },
+        reason: data.reason,
+        owner: 'resource:org.kingdee.ca.Issuer#' + data.owner
+    });
 
-//     var errcode = 1;
-//     var data = [];
+    var errcode = 1;
+    var data;
 
-//     var req = http.request(options, function (res) {
-//         res.setEncoding('utf8');
-//         res.on('data', function (result) {
-//             var temp = JSON.parse(result);
-//             for (var i in temp) {
-//                 errcode = 0;
-//                 var ele = {
-//                     certId: temp[i].certId,
-//                     issueDate: new Date(temp[i].issueDate),
-//                     certName: temp[i].cert.certName,
-//                     description: temp[i].cert.description,
-//                     valid: temp[i].cert.valid.unit === 'Forever' ? 'Forever' : temp[i].cert.valid.period + ' ' + temp[i].cert.valid.unit,
-//                     reason: temp[i].reason,
-//                     issuer: temp[i].issuer.replace(/\S+#/, ''),
-//                     owner: temp[i].owner.replace(/\S+#/, ''),
-//                 }
-//                 console.log('certId: ' + ele.certId + '\n' +
-//                     'issueDate: ' + ele.issueDate + '\n' +
-//                     'certName: ' + ele.certName + '\n' +
-//                     'description: ' + ele.description + '\n' +
-//                     'valid: ' + ele.valid + '\n' +
-//                     'issuer: ' + ele.issuer + '\n' +
-//                     'owner: ' + ele.owner + '\n'
-//                 );
-//                 data.push(ele);
-//             }
-//         });
-//         res.on("end", function () {
-//             // return console.log(errcode);
-//             return {
-//                 'errcode': errcode,
-//                 'data': data
-//             };
-//         });
-//     });
+    var temp = JSON.parse(contents);
+    data = {
+        certId: temp.certId,
+        issueDate: new Date(temp.issueDate),
+        certName: temp.cert.certName,
+        description: temp.cert.description,
+        valid: temp.cert.valid.unit === 'Forever' ? 'Forever' : temp.cert.valid.period + ' ' + temp.cert.valid.unit,
+        reason: temp.reason,
+        issuer: 'Id:99999',
+        owner: temp.owner.replace(/\S+#/, ''),
+    };
+    errcode = 0;
 
-//     req.on('error', function (err) {
-//         console.log("Got error: " + err.message);
-//     });
-//     req.end();
-// };
+    return {
+        'errcode': errcode,
+        'data': data
+    };
+};
 
-Cert.prototype.getCert = function (certId) {
+Cert.prototype.get = function (certId) {
+    var options = {
+        host: '123.207.51.234',
+        port: '3000',
+        path: '/api/queries/selectCertificatesById?certId=' + certId,
+        method: 'GET'
+    };
+
+    var errcode = 1;
+    var data = [];
+
+    var req = http.request(options, function (res) {
+        res.setEncoding('utf8');
+        res.on('data', function (result) {
+            var temp = JSON.parse(result);
+            for (var i in temp) {
+                errcode = 0;
+                var ele = {
+                    certId: temp[i].certId,
+                    issueDate: new Date(temp[i].issueDate),
+                    certName: temp[i].cert.certName,
+                    description: temp[i].cert.description,
+                    valid: temp[i].cert.valid.unit === 'Forever' ? 'Forever' : temp[i].cert.valid.period + ' ' + temp[i].cert.valid.unit,
+                    reason: temp[i].reason,
+                    issuer: temp[i].issuer.replace(/\S+#/, ''),
+                    owner: temp[i].owner.replace(/\S+#/, ''),
+                };
+                // console.log('certId: ' + ele.certId + '\n' +
+                //     'issueDate: ' + ele.issueDate + '\n' +
+                //     'certName: ' + ele.certName + '\n' +
+                //     'description: ' + ele.description + '\n' +
+                //     'valid: ' + ele.valid + '\n' +
+                //     'issuer: ' + ele.issuer + '\n' +
+                //     'owner: ' + ele.owner + '\n'
+                // );
+                data.push(ele);
+            }
+        });
+        res.on("end", function () {
+            return {
+                'errcode': errcode,
+                'data': data
+            };
+        });
+    });
+
+    req.on('error', function (err) {
+        console.log("Got error: " + err.message);
+    });
+    req.end();
+};
+
+Cert.prototype.getTest = function (certId) {
     var errcode = 1;
     var data = [];
 
@@ -136,7 +200,10 @@ Cert.prototype.getCert = function (certId) {
     );
     data.push(ele);
 
-    return new Promise(errcode, data);
+    return {
+        'errcode': errcode,
+        'data': data
+    };
 };
 
 module.exports = Cert;

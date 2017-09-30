@@ -15,29 +15,6 @@ router.get('/add', function (req, res) {
     });
 });
 
-router.post('/add', function (req, res) {
-    var cert = new Cert();
-    data[0].certId = req.body.certId;
-    data[0].issueDate = new Date();
-    data[0].certName = req.body.certName;
-    data[0].description = req.body.description;
-    data[0].reason = req.body.reason;
-    data[0].owner = req.body.owner;
-    data[0].add(function () {
-        res.render('show', {
-            title: "查验证书",
-            certId: data[0].certId,
-            // issueDate: data[0].issueDate,
-            certName: data[0].certName,
-            // description: data[0].description,
-            // valid: data[0].valid,
-            // reason: data[0].reason,
-            // issuer: data[0].issuer,
-            // owner: data[0].owner
-        });
-    });
-});
-
 function getTime(date) {
     return date.getFullYear() +
         "-" + date.getMonth() + 1 + "-" +
@@ -45,6 +22,34 @@ function getTime(date) {
         date.getHours() + ":" +
         date.getMinutes();
 }
+
+router.post('/add', function (req, res) {
+    var cert = new Cert();
+    // var cert = cert.post({
+    var result = cert.postTest({
+        certId: req.body.certId,
+        issueDate: new Date(),
+        certName: req.body.certName,
+        description: req.body.description,
+        reason: req.body.reason,
+        owner: req.body.owner
+    });
+    if (result.errcode == 1) {
+        return res.locals.message = "发布错误";
+    }
+    var data = result.data;
+    res.render('show', {
+        title: "发布证书",
+        certId: data.certId,
+        issueDate: getTime(data.issueDate),
+        certName: data.certName,
+        description: data.description,
+        valid: data.valid,
+        reason: data.reason,
+        issuer: data.issuer,
+        owner: data.owner
+    });
+});
 
 //用户进入查证页面
 router.get('/check', function (req, res) {
@@ -56,25 +61,28 @@ router.get('/check', function (req, res) {
 //用户点击查证按钮
 router.post('/check', function (req, res) {
     var cert = new Cert();
-    cert.getCert(req.body.certId, function (errcode, data) {
-        consolo.log('e');
-        res.render('show', {
-            title: "查验证书",
-            certId: data[0].certId,
-            issueDate: getTime(data[0].issueDate),
-            certName: data[0].certName,
-            description: data[0].description,
-            valid: data[0].valid,
-            reason: data[0].reason,
-            issuer: data[0].issuer,
-            owner: data[0].owner
-        });
+    // var result = cert.get(req.body.certId);
+    var result = cert.getTest(req.body.certId);
+    var data = result.data;
+    if (result.errcode == 1) {
+        return res.locals.message = "No certificate";
+    }
+    res.render('show', {
+        title: "查验证书",
+        certId: data[0].certId,
+        issueDate: getTime(data[0].issueDate),
+        certName: data[0].certName,
+        description: data[0].description,
+        valid: data[0].valid,
+        reason: data[0].reason,
+        issuer: data[0].issuer,
+        owner: data[0].owner
     });
 });
 
 router.get('/show', function (req, res) {
     res.render('show', {
-        title: "证书",
+        title: "证书模板",
         certId: '00001',
         issueDate: '2017-09-30',
         certName: 'Test',
