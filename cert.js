@@ -69,42 +69,45 @@ Cert.prototype.getCert = function (certId) {
     var errcode = 1;
     var data = [];
 
-    var req = http.get(options, function (res) {
+    var req = http.request(options, function (res) {
         res.setEncoding('utf8');
         res.on('data', function (result) {
-            if (result) {
+            var temp = JSON.parse(result);
+            for (var i in temp) {
                 errcode = 0;
-                var temp = JSON.parse(result);
-                for (var i in temp) {
-                    var ele = {
-                        certId: temp[i].certId,
-                        issueDate: new Date(temp[i].issueDate),
-                        certName: temp[i].cert.certName,
-                        description: temp[i].cert.description,
-                        valid: temp[i].cert.valid.unit === 'Forever' ? 'Forever' : temp[i].cert.valid.period + ' ' + temp[i].cert.valid.unit,
-                        reason: temp[i].reason,
-                        issuer: temp[i].issuer.replace(/\S+#/, ''),
-                        owner: temp[i].owner.replace(/\S+#/, ''),
-                    }
-                    console.log('certId: ' + ele.certId + '\n' +
-                        'issueDate: ' + ele.issueDate + '\n' +
-                        'certName: ' + ele.certName + '\n' +
-                        'description: ' + ele.description + '\n' +
-                        'valid: ' + ele.valid + '\n' +
-                        'issuer: ' + ele.issuer + '\n' +
-                        'owner: ' + ele.owner + '\n'
-                    );
-                    data.push(ele);
+                var ele = {
+                    certId: temp[i].certId,
+                    issueDate: new Date(temp[i].issueDate),
+                    certName: temp[i].cert.certName,
+                    description: temp[i].cert.description,
+                    valid: temp[i].cert.valid.unit === 'Forever' ? 'Forever' : temp[i].cert.valid.period + ' ' + temp[i].cert.valid.unit,
+                    reason: temp[i].reason,
+                    issuer: temp[i].issuer.replace(/\S+#/, ''),
+                    owner: temp[i].owner.replace(/\S+#/, ''),
                 }
+                console.log('certId: ' + ele.certId + '\n' +
+                    'issueDate: ' + ele.issueDate + '\n' +
+                    'certName: ' + ele.certName + '\n' +
+                    'description: ' + ele.description + '\n' +
+                    'valid: ' + ele.valid + '\n' +
+                    'issuer: ' + ele.issuer + '\n' +
+                    'owner: ' + ele.owner + '\n'
+                );
+                data.push(ele);
             }
-        }).on("end", function () {
-            console.log(errcode);
-            return errcode, data;
-        }).on('error', function (err) {
-            console.log("Got error: " + err.message);
+        });
+        res.on("end", function () {
+            // return console.log(errcode);
+            return {
+                'errcode': errcode,
+                'data': data
+            };
         });
     });
 
+    req.on('error', function (err) {
+        console.log("Got error: " + err.message);
+    });
     req.end();
 };
 
