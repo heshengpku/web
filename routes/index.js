@@ -16,8 +16,8 @@ router.get('/add', function (req, res) {
 });
 
 function getTime(date) {
-    return date.getFullYear() +
-        "-" + date.getMonth() + 1 + "-" +
+    return date.getFullYear() + "-" + 
+        date.getMonth()  + "-" +
         date.getDate() + " " +
         date.getHours() + ":" +
         date.getMinutes();
@@ -84,7 +84,7 @@ router.get('/show', function (req, res) {
     res.render('show', {
         title: "证书模板",
         certId: '00001',
-        issueDate: '2017-09-30',
+        issueDate: getTime(new Date()),
         certName: 'Test',
         description: 'Test',
         valid: 'Forever',
