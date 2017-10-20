@@ -13,11 +13,14 @@ block content
             label.label(for='description') 描述
             input(type='text',placeholder='证书描述',id='description',name='description')
         div.item
-            label.label(for='reason') 发证理由
+            label.label(for='reason') 理由
             input(type='text',placeholder='发证理由（可选）',id='reason',name='reason')
         div.item
+            label.label(for='owner') 发证人
+            input(type='text',placeholder='发证人ID',id='owner',name='owner')
+        div.item
             label.label(for='owner') 获证人
-            input(type='text',placeholder='获证人id',id='owner',name='owner')
+            input(type='text',placeholder='获证人ID',id='owner',name='owner')
         div.item
             label.label
             input(type='submit' id='sub',name='sub' value='提交')

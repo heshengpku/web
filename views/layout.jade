@@ -2,7 +2,8 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='../stylesheets/style.css')
+    link(rel='stylesheet', href='./stylesheets/style.css')
+    //- link(rel='stylesheet', href='https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css')
   body
       nav.header
           ul.list
@@ -16,10 +17,13 @@ html
                   a(href='/check') 查证
               li
                   a(href='/show') 模板
-       div.container
-           block content
-           hr
-           footer.footer
-               p
-                   a(href='http://www.kingdee.com') Kingdee
-                   | @2017
+      div.container
+          block content
+          hr
+          footer.footer
+              p
+                a(href='http://www.kingdee.com') Kingdee
+                | @2017
+    //-   script(src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js")
+    //-   script(src="https://cdn.bootcss.com/popper.js/1.12.3/umd/popper.min.js")
+    //-   script(src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js")

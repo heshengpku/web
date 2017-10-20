@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var Cert = require('../cert');
+var Cert = require('../lib/cert');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -16,8 +16,8 @@ router.get('/add', function (req, res) {
 });
 
 function getTime(date) {
-    return date.getFullYear() + "-" + 
-        date.getMonth()  + "-" +
+    return date.getFullYear() + "-" +
+        (date.getMonth() + 1) + "-" +
         date.getDate() + " " +
         date.getHours() + ":" +
         date.getMinutes();

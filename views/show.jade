@@ -5,26 +5,25 @@ block content
         p.mess #{message}
         div.item
             label.label 证书编号
-                        |  #{certId}
+            label.mess  #{certId}
         div.item
             label.label 发证日期
-                        | #{issueDate}
+            label.mess #{issueDate}
         div.item
             label.label 证书名称
-                        | #{certName}
+            label.mess #{certName}
         div.item
             label.label 证书内容
-                        | #{description}
+            label.mess #{description}
         div.item
             label.label 有效期
-                        | #{valid}
-        if reason
-            div.item
-                label.label 补充理由
-                            | #{reason}
+            label.mess #{valid}
+        div.item
+            label.label 补充理由
+            label.mess #{reason}
         div.item
             label.label 发证人
-                        | #{issuer}
+            label.mess #{issuer}
         div.item
             label.label 收证人
-                        | #{owner}
+            label.mess #{owner}
