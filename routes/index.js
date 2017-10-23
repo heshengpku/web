@@ -15,12 +15,10 @@ router.get('/add', function (req, res) {
     });
 });
 
-function getTime(date) {
+function getDate(date) {
     return date.getFullYear() + "-" +
         (date.getMonth() + 1) + "-" +
-        date.getDate() + " " +
-        date.getHours() + ":" +
-        date.getMinutes();
+        date.getDate();
 }
 
 router.post('/add', function (req, res) {
@@ -41,7 +39,7 @@ router.post('/add', function (req, res) {
     res.render('show', {
         title: "发布证书",
         certId: data.certId,
-        issueDate: getTime(data.issueDate),
+        issueDate: getDate(data.issueDate),
         certName: data.certName,
         description: data.description,
         valid: data.valid,
@@ -70,7 +68,7 @@ router.post('/check', function (req, res) {
     res.render('show', {
         title: "查验证书",
         certId: data[0].certId,
-        issueDate: getTime(data[0].issueDate),
+        issueDate: getDate(data[0].issueDate),
         certName: data[0].certName,
         description: data[0].description,
         valid: data[0].valid,
@@ -84,7 +82,7 @@ router.get('/show', function (req, res) {
     res.render('show', {
         title: "证书模板",
         certId: '00001',
-        issueDate: getTime(new Date()),
+        issueDate: getDate(new Date()),
         certName: 'Test',
         description: 'Test',
         valid: 'Forever',
